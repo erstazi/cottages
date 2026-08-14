@@ -113,9 +113,9 @@ if minetest.settings:get_bool("cottages_hay", true) then
 	dofile(minetest.get_modpath("cottages").."/nodes_hay.lua");
 end
 
-if minetest.settings:get_bool("cottages_anvil", true) then
-	dofile(minetest.get_modpath("cottages").."/nodes_anvil.lua");
-end
+-- if minetest.settings:get_bool("cottages_anvil", true) then
+	-- dofile(minetest.get_modpath("cottages").."/nodes_anvil.lua");
+-- end
 
 if minetest.settings:get_bool("cottages_doorlike", true) then
 	dofile(minetest.get_modpath("cottages").."/nodes_doorlike.lua");
