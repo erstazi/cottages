@@ -114,7 +114,8 @@ if minetest.settings:get_bool("cottages_hay", true) then
 end
 
 local anvil_enabled = minetest.settings:get_bool("cottages_anvil", true)
-minetest.log("warning", "COTTAGES_ANVIL = " .. tostring(anvil_enabled)
+
+minetest.log("warning", "COTTAGES_ANVIL = " .. tostring(anvil_enabled))
 -- if minetest.settings:get_bool("cottages_anvil", true) then
 	-- dofile(minetest.get_modpath("cottages").."/nodes_anvil.lua");
 -- end
