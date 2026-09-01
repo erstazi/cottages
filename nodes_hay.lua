@@ -87,9 +87,14 @@ if minetest.registered_items[dirt_with_grass]
       local timer = minetest.get_node_timer(pos_above)
       timer:start(math.random(60, 300))
 
-      wielded:add_wear(65535 / 200)
+      local wear = wielded:get_wear() + math.floor(65535 / 200)
 
-      digger:set_wielded_item(wielded)
+      if wear >= 65535 then
+        digger:set_wielded_item(ItemStack(""))
+      else
+        wielded:set_wear(wear)
+        digger:set_wielded_item(wielded)
+      end
     end,
   })
 end
