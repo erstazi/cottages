@@ -38,6 +38,7 @@ minetest.register_tool("cottages:pitchfork", {
 	},
 	sound = {breaks = "default_tool_breaks"},
 	-- place the pitchfork somewhere
+	--[[
 	on_place = function(itemstack, placer, pointed_thing)
 		if( placer == nil or pointed_thing == nil or pointed_thing.type ~= "node") then
 			return nil
@@ -62,6 +63,47 @@ minetest.register_tool("cottages:pitchfork", {
 		-- the tool has been placed; consume it
 		return ItemStack("")
 	end,
+	]]
+on_place = function(itemstack, placer, pointed_thing)
+  if placer == nil or pointed_thing == nil or pointed_thing.type ~= "node" then
+    return itemstack
+  end
+
+  local pos = minetest.get_pointed_thing_position(pointed_thing, 1)
+
+  if not pos then
+    return itemstack
+  end
+
+  local node = minetest.get_node(pos)
+
+  if node.name ~= "air" then
+    return itemstack
+  end
+
+  if minetest.is_protected(pos, placer:get_player_name()) then
+    return itemstack
+  end
+
+  minetest.set_node(pos, {
+    name = "cottages:pitchfork_placed",
+    param2 = minetest.dir_to_facedir(placer:get_look_dir()),
+  })
+
+  local nnode = minetest.get_node(pos)
+
+  if nnode.name ~= "cottages:pitchfork_placed" then
+    return itemstack
+  end
+
+  local meta = minetest.get_meta(pos)
+  meta:set_int("wear", itemstack:get_wear())
+  meta:set_string("infotext", S("pitchfork (for hay and straw)"))
+
+  itemstack:take_item()
+
+  return itemstack
+end,
 })
 
 
