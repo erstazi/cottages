@@ -12,91 +12,56 @@ end
 -- If default:dirt_with_grass is digged while wielding a pitchfork, it will
 -- turn into dirt and get some hay placed above it.
 -- The hay will disappear (decay) after a couple of minutes.
---[[
-if(     minetest.registered_items[dirt_with_grass]
-    and minetest.registered_items[dirt]
-    and minetest.registered_tools["cottages:pitchfork"]) then
-  minetest.override_item(dirt_with_grass, {
-	after_dig_node = function(pos, oldnode, oldmetadata, digger)
-		if( not( pos ) or not( digger )) then
-			return
-		end
-		local wielded = digger:get_wielded_item()
-		if(    not( wielded )
-		    or not( wielded:get_name() )
-		    or (wielded:get_name()~="cottages:pitchfork")) then
-			return
-		end
 
-		local pos_above = {x=pos.x, y=pos.y+1, z=pos.z}
-		local node_above = minetest.get_node_or_nil( pos_above)
-		if( not(node_above) or not(node_above.name) or node_above.name ~= "air" ) then
-			return nil
-		end
-		minetest.swap_node( pos,       {name=dirt})
-		minetest.add_node(  pos_above, {name="cottages:hay_mat", param2=math.random(2,25)})
-		-- start a node timer so that the hay will decay after some time
-		local timer = minetest.get_node_timer(pos_above)
-		if not timer:is_started() then
-			timer:start(math.random(60, 300))
-		end
-		-- prevent dirt from beeing multiplied this way (that is: give no dirt!)
-		local inv = digger:get_inventory()
-		inv:remove_item('main', tostring(dirt)..' 1')
-		return
-	end,
-  })
-end
-]]
 if minetest.registered_items[dirt_with_grass]
-    and minetest.registered_items[dirt]
-    and minetest.registered_tools["cottages:pitchfork"] then
+		and minetest.registered_items[dirt]
+		and minetest.registered_tools["cottages:pitchfork"] then
 
-  minetest.override_item(dirt_with_grass, {
-    on_dig = function(pos, node, digger)
+	minetest.override_item(dirt_with_grass, {
+		on_dig = function(pos, node, digger)
 
-      if not digger then
-        return
-      end
+			if not digger then
+				return
+			end
 
-      local wielded = digger:get_wielded_item()
+			local wielded = digger:get_wielded_item()
 
-      if wielded:get_name() ~= "cottages:pitchfork" then
-        return minetest.node_dig(pos, node, digger)
-      end
+			if wielded:get_name() ~= "cottages:pitchfork" then
+				return minetest.node_dig(pos, node, digger)
+			end
 
-      local pos_above = {
-        x = pos.x,
-        y = pos.y + 1,
-        z = pos.z,
-      }
+			local pos_above = {
+				x = pos.x,
+				y = pos.y + 1,
+				z = pos.z,
+			}
 
-      local node_above = minetest.get_node(pos_above)
+			local node_above = minetest.get_node(pos_above)
 
-      if node_above.name ~= "air" then
-        return minetest.node_dig(pos, node, digger)
-      end
+			if node_above.name ~= "air" then
+				return minetest.node_dig(pos, node, digger)
+			end
 
-      minetest.swap_node(pos, {name = dirt})
+			minetest.swap_node(pos, {name = dirt})
 
-      minetest.add_node(pos_above, {
-        name = "cottages:hay_mat",
-        param2 = math.random(2, 25),
-      })
+			minetest.add_node(pos_above, {
+				name = "cottages:hay_mat",
+				param2 = math.random(2, 25),
+			})
 
-      local timer = minetest.get_node_timer(pos_above)
-      timer:start(math.random(60, 300))
+			local timer = minetest.get_node_timer(pos_above)
+			timer:start(math.random(60, 300))
 
-      local wear = wielded:get_wear() + math.floor(65535 / 200)
+			local wear = wielded:get_wear() + math.floor(65535 / 200)
 
-      if wear >= 65535 then
-        digger:set_wielded_item(ItemStack(""))
-      else
-        wielded:set_wear(wear)
-        digger:set_wielded_item(wielded)
-      end
-    end,
-  })
+			if wear >= 65535 then
+				digger:set_wielded_item(ItemStack(""))
+			else
+				wielded:set_wear(wear)
+				digger:set_wielded_item(wielded)
+			end
+		end,
+	})
 end
 
 
